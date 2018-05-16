@@ -1,0 +1,44 @@
+
+# libreoffice
+.~lock*.o*
+
+# Python & VirtualEnv
+/env/
+/venv/
+*.py[cod]
+
+# IntelliJ IDEA Project
+.idea/
+*.iml
+
+# Node modules
+/node_modules/
+
+#sass project files
+.sass-cache/
+
+db.sqlite3
+
+# System Junk
+*.so
+*~
+*.swp
+*.swo
+*.diff
+*.err
+*.orig
+*.log
+*.rej
+*.vi
+.DS_Store
+Thumbs.db
+.cache
+.project
+.settings
+_notes
+dwsync.xml
+*.iml
+
+
+# local settings
+settings_local.py

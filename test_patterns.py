@@ -5,9 +5,13 @@ from tools.plot import dump_values
 def dump(pat):
     print()
     print(pat)
-    print(pat.values(30))
+    print(pat[:30])
     dump_values(pat.values(150))
 
+
+if 0:
+    p1 = PatternValues([0,1,2,3,4,5,6,7,8,9])
+    print((10*p1)[0:10:2])
 
 if 1:
     p1 = PatternValues([1,2,3])

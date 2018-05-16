@@ -40,6 +40,11 @@ class PatternBase:
         return PatternIterator(self)
 
     def __getitem__(self, idx):
+        if isinstance(idx, slice):
+            return [self.get_item(i) for i in range(idx.start or 0, idx.stop, idx.step or 1)]
+        return self.get_item(idx)
+
+    def get_item(self, idx):
         raise NotImplementedError
 
     def __add__(self, other):
@@ -101,7 +106,7 @@ class PatternBinaryOperator(PatternBase):
     def info_str(self):
         return "%s %s %s" % (self.left, self.op, self.right)
 
-    def __getitem__(self, idx):
+    def get_item(self, idx):
         return self.func(_get_item(self.left, idx), _get_item(self.right, idx))
 
 
@@ -118,7 +123,7 @@ class PatternValues(PatternBase):
             s += ", loop"
         return s
 
-    def __getitem__(self, idx):
+    def get_item(self, idx):
         if self.loop and self._values:
             idx = idx % len(self._values)
         return self._values[idx]
@@ -130,7 +135,7 @@ class PatternFormula(PatternBase):
         super().__init__()
         self.func = func
 
-    def __getitem__(self, idx):
+    def get_item(self, idx):
         return self.func(idx)
 
 
@@ -148,7 +153,7 @@ class PatternResize(PatternBase):
             s += ", loop"
         return s
 
-    def __getitem__(self, idx):
+    def get_item(self, idx):
         length = _get_item(self.length, idx)
         if idx >= length:
             if not self.loop:
@@ -171,7 +176,7 @@ class PatternRepeat(PatternBase):
         s = "pat=%s, len=%s" % (self.pattern, self.count)
         return s
 
-    def __getitem__(self, idx):
+    def get_item(self, idx):
         count = _get_item(self.count, idx)
         if count > 1:
             idx //= count

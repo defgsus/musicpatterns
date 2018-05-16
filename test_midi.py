@@ -1,6 +1,10 @@
 import time
 import mido
 
+from tools.midi import *
+from tools.patterns import *
+from tools.plot import *
+
 
 def open_midi_output(idx=None):
     ports = mido.get_output_names()
@@ -33,6 +37,14 @@ def test_midifile(output):
             print(msg)
         output.send(msg)
 
+if 0:
+    output = open_midi_output(0)
+    test_midifile(output)
 
-output = open_midi_output(0)
-test_midifile(output)
+
+if 1:
+    p1 = PatternRepeat(PatternValues([1,2,3]), PatternValues([1,2,3,4]))
+    dump_values(p1[:128])
+
+    midi = generate_midifile(p1+36)
+    play_midifile(midi, idx=0)

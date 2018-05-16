@@ -1,0 +1,4 @@
+# python3
+# apt-get libasound2-dev
+mido==1.2.8
+python-rtmidi==1.1.0

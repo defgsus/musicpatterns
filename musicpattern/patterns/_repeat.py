@@ -11,7 +11,7 @@ class Repeat(PatternBase):
 
     def iterate(self):
         try:
-            times = Next(self.times)
+            times = Next(self.times, repeat_scalar=True)
 
             count = 0
             while count < times.next():

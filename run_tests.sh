@@ -1,2 +1,2 @@
-python -m unittest musicpattern.tests
+./env/bin/python -m unittest musicpattern.tests --failfast
 

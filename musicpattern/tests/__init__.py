@@ -1,4 +1,5 @@
-from .test_01_pattern_basics import *
+from .test_01_next import *
+from .test_02_pattern_basics import *
 
 
 if __name__ == "__main__":

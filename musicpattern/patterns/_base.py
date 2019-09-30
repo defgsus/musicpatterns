@@ -111,8 +111,8 @@ class PatternBinaryOperator(PatternBase):
 
     def iterate(self):
         try:
-            left = Next(self.left)
-            right = Next(self.right)
+            left = Next(self.left, repeat_scalar=True)
+            right = Next(self.right, repeat_scalar=True)
             while True:
                 yield self.func(left.next(), right.next())
 

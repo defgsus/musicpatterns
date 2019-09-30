@@ -11,8 +11,8 @@ class Range(PatternBase):
 
     def iterate(self):
         try:
-            end = Next(self.end)
-            offset = Next(self.offset)
+            end = Next(self.end, repeat_scalar=True)
+            offset = Next(self.offset, repeat_scalar=True)
 
             value = 0
             while True:

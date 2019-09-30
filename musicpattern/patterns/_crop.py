@@ -2,20 +2,23 @@ from ._base import PatternBase
 from ._next import Next
 
 
-class Limit(PatternBase):
+class MaxLength(PatternBase):
+    """
+    Force maximum length
+    """
 
-    def __init__(self, pattern, end):
+    def __init__(self, pattern, length):
         self.pattern = None
-        self.end = None
-        super().__init__(pattern=pattern, end=end)
+        self.length = None
+        super().__init__(pattern=pattern, length=length)
 
     def iterate(self):
         try:
             pattern = Next(self.pattern)
-            end = Next(self.end)
+            length = Next(self.length, repeat_scalar=True)
 
             count = 0
-            while count < end.next():
+            while count < length.next():
                 count += 1
                 yield pattern.next()
 

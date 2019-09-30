@@ -63,3 +63,44 @@ class NoteOns(KeyValue):
         midifile.tracks.append(track)
         return midifile
 
+    def to_string(self, max_length=128):
+        notes_by_time = dict()
+        min_note = None
+        max_note = None
+
+        cur_time = 0
+        for n in MaxLength(self, max_length):
+            note = n["note_on"]
+            time = n["time"]
+
+            if min_note is None:
+                min_note = note
+            else:
+                min_note = min(min_note, note)
+            if max_note is None:
+                max_note = note
+            else:
+                max_note = max(max_note, note)
+
+            key_time = cur_time // 32
+            if key_time not in notes_by_time:
+                notes_by_time[key_time] = set()
+            notes_by_time[key_time].add(note)
+            
+            cur_time += time
+
+        min_key_time = min(notes_by_time.keys())
+        max_key_time = max(notes_by_time.keys())
+
+        num_notes = max_note - min_note
+        num_time_keys = max_key_time - min_key_time
+
+        lines = [["." for x in range(num_time_keys+1)] for y in range(num_notes+1)]
+        print(notes_by_time)
+        for key_time, notes in notes_by_time.items():
+            x = key_time - min_key_time
+            for note in notes:
+                y = num_notes - 1 - (note - min_note)
+                lines[y][x] = "*"
+
+        return "\n".join("".join(line) for line in lines)

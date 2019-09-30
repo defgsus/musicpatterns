@@ -25,5 +25,7 @@ if __name__ == "__main__":
 
     notes = notes2()
 
+    print(notes.to_string())
+
     player.play(notes.to_midi_file(max_length=2**16))
 

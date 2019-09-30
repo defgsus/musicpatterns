@@ -1,4 +1,4 @@
-from .base import PatternBase
+from ._base import PatternBase
 
 
 class List(PatternBase):

@@ -1,5 +1,5 @@
-from .base import PatternBase
-from .next import Next
+from ._base import PatternBase
+from ._next import Next
 
 
 class Range(PatternBase):

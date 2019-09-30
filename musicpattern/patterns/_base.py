@@ -1,4 +1,4 @@
-from .next import Next
+from ._next import Next
 
 
 class PatternIterator:

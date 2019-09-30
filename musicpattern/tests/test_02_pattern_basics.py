@@ -22,6 +22,12 @@ class TestPatternBase(unittest.TestCase):
 
         self.assertEqual([23, 23], list(MaxLength(run_forever(), 2)))
 
+    def test_05_length(self):
+        self.assertEqual([1, 2, 3, 0, 0, 0], list(Length([1, 2, 3], 6)))
+        self.assertEqual([1, 2, 3, 7, 7, 7], list(Length([1, 2, 3], 6, default=7)))
+        self.assertEqual([1, 2, 3, 7, 8, 9], list(Length([1, 2, 3], 6, default=[7, 8, 9, 10])))
+        self.assertEqual([1, 2, 3, 7, 8], list(Length([1, 2, 3], 6, default=[7, 8])))
+
     def test_10_operators(self):
         self.assertEqual([2, 3, 4], list(List([1, 2, 3]) + 1))
         self.assertEqual([5, 7, 9], list(List([1, 2, 3]) + List([4, 5, 6])))

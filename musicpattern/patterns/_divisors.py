@@ -2,6 +2,7 @@ import math
 
 from ._base import PatternBase
 from ._next import Next
+from ._list import List
 
 
 class Divisors(PatternBase):
@@ -27,11 +28,11 @@ class Divisors(PatternBase):
                     continue
 
                 elif number == 1:
-                    yield [1]
+                    yield List([1])
                     continue
 
                 elif number == -1:
-                    yield [-1]
+                    yield List([-1])
                     continue
 
                 elif number < 0:
@@ -45,7 +46,7 @@ class Divisors(PatternBase):
                 if divisors[-1] != number * sign:
                     divisors.append(number * sign)
 
-                yield divisors
+                yield List(divisors)
 
         except StopIteration:
             return

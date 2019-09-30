@@ -1,3 +1,4 @@
+from .next import Next
 
 
 class PatternIterator:
@@ -113,5 +114,11 @@ class PatternBinaryOperator(PatternBase):
             raise ValueError("Unsupported operator '%s'" % self.op)
 
     def iterate(self):
-        for left, right in zip(self.left, self.right):
-            yield self.func(left, right)
+        try:
+            left = Next(self.left)
+            right = Next(self.right)
+            while True:
+                yield self.func(left.next(), right.next())
+
+        except StopIteration:
+            pass

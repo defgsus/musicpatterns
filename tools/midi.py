@@ -11,7 +11,7 @@ def generate_midifile(notes, count=128):
         if i >= count:
             break
         track.append(mido.Message("note_on", note=n, time=128))
-        track.append(mido.Message("note_off", note=n))
+        #track.append(mido.Message("note_off", note=n))
 
     return midifile
 
@@ -31,7 +31,7 @@ def play_midifile(midifile, idx=None, output=None):
         output = open_midi_output(idx)
 
     for msg in midifile.play():
-        print(msg)
+        #print(msg)
         output.send(msg)
 
 

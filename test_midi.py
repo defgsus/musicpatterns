@@ -43,8 +43,8 @@ if 0:
 
 
 if 1:
-    p1 = PatternRepeat(PatternValues([1,2,3]), PatternValues([1,2,3,4]))
+    p1 = PatternRepeat(PatternValues([0,2,4,5,6,7]), PatternValues([1,2,3]))
     dump_values(p1[:128])
 
-    midi = generate_midifile(p1+36)
-    play_midifile(midi, idx=0)
+    midi = generate_midifile(p1+36, count=48)
+    play_midifile(midi, idx=None)

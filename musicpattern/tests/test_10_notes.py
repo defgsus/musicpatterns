@@ -12,7 +12,6 @@ class TestNotes(unittest.TestCase):
             "time": 50
         }
         seq = KeyValue(data)
-        print(list(seq))
 
 
 if __name__ == "__main__":

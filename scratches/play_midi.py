@@ -1,5 +1,6 @@
 from musicpattern.midi import MidoPlayer
 from musicpattern.patterns import *
+from musicpattern import chords
 
 
 def notes1():
@@ -33,14 +34,29 @@ def notes_layers():
     )
 
 
+def notes_chord_progression():
+
+    notes = FlatList(
+        Lambda([0, 2, 3, 5], lambda value: value + List(chords.Major))
+    )
+
+    notes = RepeatEach([0, 2, 3, 5], 3) + Repeat(chords.Major)
+
+    return NoteOns(
+        note_on=Repeat(notes) + 60,
+        velocity=80,
+        time=512,
+    )
+
+
 if __name__ == "__main__":
 
     try:
         player = MidoPlayer(device_index=1)
 
-        notes = notes_layers()
+        notes = notes_chord_progression()
 
-        print(notes.to_string())
+        print(notes.to_string(max_length=40))
 
         player.play(notes.to_midi_file(max_length=2**16))
 

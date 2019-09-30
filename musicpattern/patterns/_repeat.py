@@ -29,3 +29,25 @@ class Repeat(PatternBase):
 
         except StopIteration:
             return
+
+
+class RepeatEach(PatternBase):
+    """
+    Repeat each element n times.
+    """
+
+    def __init__(self, pattern, times):
+        self.pattern = None
+        self.times = None
+        super().__init__(pattern=pattern, times=times)
+
+    def iterate(self):
+        try:
+            times = Next(self.times, repeat_scalar=True)
+
+            for x in self.pattern:
+                for i in range(times.next()):
+                    yield x
+
+        except StopIteration:
+            return

@@ -50,6 +50,10 @@ class PatternBase:
     def to_list(self):
         return convert_to_list(self)
 
+    def to_flat_list(self):
+        from ._list import FlatList
+        return convert_to_list(FlatList(self))
+
     # --- math operators ---
 
     def __add__(self, other):
@@ -69,6 +73,9 @@ class PatternBase:
 
     def __mod__(self, other):
         return PatternBinaryOperator(self, other, "%")
+
+    def __pow__(self, power, modulo=None):
+        return PatternBinaryOperator(self, power, "**")
 
     def __radd__(self, other):
         return PatternBinaryOperator(other, self, "+")

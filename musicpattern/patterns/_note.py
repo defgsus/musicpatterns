@@ -49,8 +49,8 @@ class NoteOns(KeyValue):
         for i, n in enumerate(MaxLength(self, max_length)):
             track.append(mido.Message(
                 "note_on",
-                note=n["note_on"],
-                velocity=n["velocity"],
+                note=int(n["note_on"]),
+                velocity=int(n["velocity"]),
                 time=n["time"],
             ))
 
@@ -86,7 +86,7 @@ class NoteOns(KeyValue):
             if key_time not in notes_by_time:
                 notes_by_time[key_time] = set()
             notes_by_time[key_time].add(note)
-            
+
             cur_time += time
 
         min_key_time = min(notes_by_time.keys())
@@ -96,7 +96,6 @@ class NoteOns(KeyValue):
         num_time_keys = max_key_time - min_key_time
 
         lines = [["." for x in range(num_time_keys+1)] for y in range(num_notes+1)]
-        print(notes_by_time)
         for key_time, notes in notes_by_time.items():
             x = key_time - min_key_time
             for note in notes:

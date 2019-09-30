@@ -85,6 +85,9 @@ class PatternBase:
     def __rmod__(self, other):
         return PatternBinaryOperator(other, self, "%")
 
+    def __rpow__(self, other):
+        return PatternBinaryOperator(other, self, "**")
+
 
 class PatternBinaryOperator(PatternBase):
     def __init__(self, left, right, op):
@@ -106,6 +109,8 @@ class PatternBinaryOperator(PatternBase):
             self.func = lambda l, r: l // r
         elif self.op == "%":
             self.func = lambda l, r: l % r
+        elif self.op == "**":
+            self.func = lambda l, r: l ** r
         if self.func is None:
             raise ValueError("Unsupported operator '%s'" % self.op)
 

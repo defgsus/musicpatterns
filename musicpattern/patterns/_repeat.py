@@ -16,10 +16,7 @@ class Repeat(PatternBase):
             count = 0
             while count < times.next():
                 count += 1
-                try:
-                    yield from self.pattern
-                except StopIteration:
-                    return
+                yield from self.pattern
 
         except StopIteration:
             return

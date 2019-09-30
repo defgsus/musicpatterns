@@ -1,4 +1,5 @@
 from ._next import Next
+from ._convert import convert_to_list
 
 
 class PatternIterator:
@@ -29,6 +30,9 @@ class PatternBase:
     def __repr__(self):
         return str(self)
 
+    def __iter__(self):
+        return self.iterate()
+
     def info_str(self):
         return ", ".join(
             "%s=%s" % (key, value)
@@ -41,20 +45,12 @@ class PatternBase:
     def iterate(self):
         raise NotImplementedError
 
-    #def values(self, count):
-    #    return [self[x] for x in range(count)]
+    # --- conversion ---
 
-    def __iter__(self):
-        return self.iterate()
-        #return PatternIterator(self)
+    def to_list(self):
+        return convert_to_list(self)
 
-    #def __getitem__(self, idx):
-    #    if isinstance(idx, slice):
-    #        return [self.get_item(i) for i in range(idx.start or 0, idx.stop, idx.step or 1)]
-    #    return self.get_item(idx)
-
-    # def get_item(self, idx):
-    #    raise NotImplementedError
+    # --- math operators ---
 
     def __add__(self, other):
         return PatternBinaryOperator(self, other, "+")

@@ -39,11 +39,23 @@ def notes_chord_progression():
     notes = FlatList(
         Lambda([0, 2, 3, 5], lambda value: value + List(chords.Major))
     )
-
+    # does the same thing:
     notes = RepeatEach([0, 2, 3, 5], 3) + Repeat(chords.Major)
 
     return NoteOns(
         note_on=Repeat(notes) + 60,
+        velocity=80,
+        time=512,
+    )
+
+
+def notes_chord_progression_2():
+
+    notes16 = Repeat([0, 4, 7, 10])
+    notes8 = Repeat([0, 4, 7])
+
+    return NoteOns(
+        note_on=Repeat(notes16) + 60,
         velocity=80,
         time=512,
     )

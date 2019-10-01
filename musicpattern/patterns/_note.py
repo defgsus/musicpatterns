@@ -103,3 +103,26 @@ class NoteOns(KeyValue):
                 lines[y][x] = "*"
 
         return "\n".join("".join(line) for line in lines)
+
+
+if 0:
+    class MergeNoteOns(PatternBase):
+
+        def __init__(self, *notes):
+            self.notes = None
+            super().__init__(notes=notes)
+
+        def iterate(self):
+            notes = [
+                {
+                    "note_on", Next(note_on["note_on"], repeat_scalar=True),
+                    "velocity", Next(note_on["velocity"], repeat_scalar=True),
+                    "time", Next(note_on["time"], repeat_scalar=True),
+                }
+                for note_on in self.notes
+            ]
+            try:
+                # TODO
+                pass
+            except StopIteration:
+                return

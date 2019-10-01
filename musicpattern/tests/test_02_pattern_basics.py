@@ -35,6 +35,13 @@ class TestPatternBase(unittest.TestCase):
         self.assertEqual([2, 4, 8], list(2 ** List([1, 2, 3])))
         self.assertEqual([1, 4, 9], list(List([1, 2, 3]) ** 2))
 
+    def test_15_getitem(self):
+        self.assertEqual(1, List([1, 2, 3])[0])
+        self.assertEqual(2, List([1, 2, 3])[1])
+        self.assertEqual(3, List([1, 2, 3])[2])
+        with self.assertRaises(KeyError):
+            List([1, 2, 3])[4]
+
     def test_20_range_int(self):
         self.assertEqual([0, 1, 2], list(Range(3)))
         self.assertEqual([0, 2, 4, 6, 8], list(Range(9, 2)))

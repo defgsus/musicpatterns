@@ -25,7 +25,7 @@ class PatternBase:
             setattr(self, key, value)
 
     def __str__(self):
-        return "%s(%s)" % (self.__class__.__name__, self.info_str())
+        return "%s(%s)" % (self.__class__.__name__, self.parameter_string())
 
     def __repr__(self):
         return str(self)
@@ -33,7 +33,14 @@ class PatternBase:
     def __iter__(self):
         return self.iterate()
 
-    def info_str(self):
+    def __getitem__(self, x):
+        assert isinstance(x, int)
+        for i, value in enumerate(self):
+            if i == x:
+                return value
+        raise KeyError
+
+    def parameter_string(self):
         return ", ".join(
             "%s=%s" % (key, value)
             for key, value in self.parameters().items()

@@ -5,6 +5,8 @@ def bjorklund(steps, pulses):
     """
     (c) 2011 Brian House
     https://github.com/brianhouse/bjorklund
+
+    TODO: this algorithm does not yield the same offsets as in Toussaint's paper
     """
     steps = int(steps)
     pulses = int(pulses)
@@ -60,5 +62,8 @@ class EuclideanRhythm(PatternBase):
     def iterate(self):
         rhythm = bjorklund(self.length, self.ones)
         yield from rhythm
+
+    def to_string(self):
+        return "".join("x" if x else "." for x in self)
 
 

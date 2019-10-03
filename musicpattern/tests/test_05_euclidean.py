@@ -2,7 +2,8 @@ import unittest
 
 from musicpattern.patterns import *
 
-class TestEuclideanRythm(unittest.TestCase):
+
+class TestEuclideanRhythm(unittest.TestCase):
 
     def assertPattern(self, expected_pattern, ones, length):
         pattern = EuclideanRhythm(ones, length).to_string()
@@ -64,6 +65,14 @@ class TestEuclideanRythm(unittest.TestCase):
 
     def test_13_toussaints_examples(self):
         self.assertPattern("x.xx.x.x.x.x.xx.x.x.x.x.", 13, 24)
+
+    def test_100_repeat(self):
+        self.assertPattern("x...", 1, 4)
+        self.assertPattern("x...x...", [1, 1], 4)
+        self.assertPattern("x...x...", 1, [4, 4])
+        self.assertPattern("x...x...", [1, 1], [4, 4])
+        self.assertPattern("x...x.x.", [1, 2], 4)
+        self.assertPattern("xx.x..x...", 1, [1, 2, 3, 4])
 
 
 if __name__ == "__main__":

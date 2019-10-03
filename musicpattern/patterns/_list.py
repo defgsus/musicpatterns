@@ -1,4 +1,5 @@
 from ._base import PatternBase
+from ._inspect import is_iterable
 
 
 class List(PatternBase):
@@ -18,14 +19,14 @@ class FlatList(PatternBase):
     """
 
     def __init__(self, values):
-        assert hasattr(values, "__iter__"), "FlatList values must be iterable, got %s" % type(values).__name__
+        assert is_iterable(values), "FlatList values must be iterable, got %s" % type(values).__name__
         self.values = None
         super().__init__(values=values)
 
     def iterate(self):
         def _iterate(values):
             for x in values:
-                if hasattr(x, "__iter__"):
+                if is_iterable(x):
                     yield from _iterate(x)
                 else:
                     yield x

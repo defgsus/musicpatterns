@@ -4,43 +4,16 @@ from ._key_value import KeyValue
 from ._crop import MaxLength
 
 
-class NoteOns(KeyValue):
-
-    def __init__(self, note_on, velocity=127, time=128):
-        super().__init__({
-            "note_on": note_on,
-            "velocity": velocity,
-            "time": time
-        })
-
-    def iterate(self):
-        note = Next(self.data["note_on"], repeat_scalar=True)
-        velocity = Next(self.data["velocity"], repeat_scalar=True)
-        time = Next(self.data["time"], repeat_scalar=True)
-
-        try:
-            while True:
-                cur_note = note.next()
-                cur_velocity = velocity.next()
-                cur_time = time.next()
-                if not hasattr(cur_note, "__iter__"):
-                    yield {
-                        "note_on": cur_note,
-                        "velocity": cur_velocity,
-                        "time": cur_time,
-                    }
-                else:
-                    cur_notes = list(cur_note)
-                    for i, n in enumerate(cur_notes):
-                        yield {
-                            "note_on": n,
-                            "velocity": cur_velocity,
-                            "time": cur_time if i + 1 == len(cur_notes) else 0,
-                        }
-
-        except StopIteration:
-            return
-
+class MidiMixin:
+    """
+    Mixin to create Mido miditracks from the own sequence consisting of objects:
+    {
+        "note_on": int,     #
+        "note_off": int,    # optional instead of note_on
+        "velocity": int,
+        "time": int|float,  # number of ticks to wait after note
+    }
+    """
     def to_midi_track(self, max_length=128):
         import mido
 
@@ -48,8 +21,8 @@ class NoteOns(KeyValue):
 
         for i, n in enumerate(MaxLength(self, max_length)):
             track.append(mido.Message(
-                "note_on",
-                note=int(n["note_on"]),
+                "note_on" if n.get("note_on") else "note_off",
+                note=int(n.get("note_on") or n.get("note_off")),
                 velocity=int(n["velocity"]),
                 time=n["time"],
             ))
@@ -103,6 +76,16 @@ class NoteOns(KeyValue):
                 lines[y][x] = "*"
 
         return "\n".join("".join(line) for line in lines)
+
+
+class NoteOns(MidiMixin, KeyValue):
+
+    def __init__(self, note_on, velocity=127, time=128):
+        super().__init__({
+            "note_on": note_on,
+            "velocity": velocity,
+            "time": time
+        })
 
 
 if 0:

@@ -1,3 +1,5 @@
+from ._inspect import is_iterable
+
 
 class Next:
 
@@ -6,7 +8,7 @@ class Next:
         self.repeat_scalar = repeat_scalar
         self.offset = 0
         self.iterator = None
-        if hasattr(self.value, "__iter__"):
+        if is_iterable(self.value):
             self.iterator = getattr(self.value, "__iter__")()
 
     def __str__(self):

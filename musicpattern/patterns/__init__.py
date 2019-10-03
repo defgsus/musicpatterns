@@ -3,6 +3,7 @@ from ._convert import convert_to_list
 from ._crop import MaxLength, Length
 from ._divisors import Divisors
 from ._euclidean import EuclideanRhythm
+from ._inspect import is_iterable
 from ._key_value import KeyValue
 from ._lambda import Lambda
 from ._list import List, FlatList

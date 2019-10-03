@@ -1,6 +1,8 @@
+from ._inspect import is_iterable
+
 
 def convert_to_list(pattern):
-    assert hasattr(pattern, "__iter__"), "%s is not iterable" % type(pattern).__name__
+    assert is_iterable(pattern), "%s is not iterable" % type(pattern).__name__
 
     def _convert(obj):
         if hasattr(obj, "__iter__"):

@@ -34,7 +34,7 @@ class PatternBase:
         return self.iterate()
 
     def __getitem__(self, x):
-        assert isinstance(x, int)
+        assert isinstance(x, int), "expected int, got '%s' (%s)" % (type(x).__name__, x)
         for i, value in enumerate(self):
             if i == x:
                 return value

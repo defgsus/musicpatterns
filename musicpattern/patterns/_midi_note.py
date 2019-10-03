@@ -8,16 +8,20 @@ class MidiMixin:
     """
     Mixin to create Mido miditracks from the own sequence consisting of objects:
     {
-        "note_on": int,     #
+        "note_on": int,     # note value 0-127
         "note_off": int,    # optional instead of note_on
         "velocity": int,    # 0-127
         "time": int|float,  # number of ticks to wait before note
     }
     """
-    def to_midi_track(self, max_length=128):
+    def to_midi_track(self, max_length=128, program=None):
         import mido
 
         track = mido.MidiTrack()
+        if program:
+            track.append(mido.Message(
+                "program_change", program=program,
+            ))
 
         for i, n in enumerate(MaxLength(self, max_length)):
             track.append(mido.Message(
@@ -25,6 +29,7 @@ class MidiMixin:
                 note=int(n.get("note_on") or n.get("note_off")),
                 velocity=int(n["velocity"]),
                 time=n["time"],
+                channel=n.get("channel") or 0,
             ))
 
         return track
@@ -78,40 +83,75 @@ class MidiMixin:
         return "\n".join("".join(line) for line in lines)
 
 
-class NoteOns(MidiMixin, KeyValue):
+class MidiNoteOns(MidiMixin, KeyValue):
     """
         {
             "note_on": int,     # note value 0-127
             "velocity": int,    # 0-127
             "time": int|float,  # number of ticks to wait before note
+            "channel": int,     # channel 0-15
         }
     """
-    def __init__(self, note_on, velocity=64, time=0):
+    def __init__(self, note_on, velocity=64, time=0, channel=0):
         super().__init__({
             "note_on": note_on,
             "velocity": velocity,
-            "time": time
+            "time": time,
+            "channel": channel,
         })
 
 
-if 0:
-    class MergeNoteOns(PatternBase):
+class MergeMidiNoteOns(MidiMixin, PatternBase):
 
-        def __init__(self, *notes):
-            self.notes = None
-            super().__init__(notes=notes)
+    def __init__(self, *notes):
+        self.notes = None
+        super().__init__(notes=notes)
 
-        def iterate(self):
-            notes = [
-                {
-                    "note_on", Next(note_on["note_on"], repeat_scalar=True),
-                    "velocity", Next(note_on["velocity"], repeat_scalar=True),
-                    "time", Next(note_on["time"], repeat_scalar=True),
-                }
-                for note_on in self.notes
-            ]
-            try:
-                # TODO
-                pass
-            except StopIteration:
-                return
+    def iterate(self):
+        note_iterators = [
+            Next(note)
+            for note in self.notes
+        ]
+
+        cur_time = 0
+        last_channel_time = {
+            i: 0
+            for i in range(len(note_iterators))
+        }
+
+        try:
+            while True:
+
+                next_notes = []
+                for idx, note_iter in enumerate(note_iterators):
+                    try:
+                        note = note_iter.next()
+                        next_notes.append({
+                            "note_on": note["note_on"],
+                            "velocity": note["velocity"],
+                            "time": note["time"],
+                            "channel": note.get("channel") or 0,
+                            "idx": idx,
+                        })
+                    except StopIteration:
+                        pass
+
+                if not next_notes:
+                    break
+
+                next_notes.sort(key=lambda n: n["note_on"])
+                next_notes.sort(key=lambda n: n["time"])
+
+                for note in next_notes:
+                    note_time = note["time"] + last_channel_time[note["idx"]] - cur_time
+                    cur_time += note_time
+                    last_channel_time[note["idx"]] = cur_time
+                    yield {
+                        "note_on": note["note_on"],
+                        "velocity": note["velocity"],
+                        "time": note_time,
+                        "channel": note["channel"],
+                    }
+
+        except StopIteration:
+            return

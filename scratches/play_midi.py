@@ -1,10 +1,10 @@
-from musicpattern.midi import MidoPlayer
+from musicpattern.midi import MidoPlayer, GmDrum
 from musicpattern.patterns import *
 from musicpattern import chords
 
 
 def notes1():
-    return NoteOns(
+    return MidiNoteOns(
         note_on=Repeat([1, 2, 3, 4, 5]) + 60,
         time=128,
     )
@@ -13,7 +13,7 @@ def notes1():
 def notes_divisors():
     divisors = Divisors(Range(24) + 1) + 60
 
-    return NoteOns(
+    return MidiNoteOns(
         note_on=Repeat(divisors),
         velocity=60,
         time=128,
@@ -27,7 +27,7 @@ def notes_layers():
         Repeat(Range(7))
     )
 
-    return NoteOns(
+    return MidiNoteOns(
         note_on=layers + 50,
         velocity=Repeat(List([1, .7, .8, .6]) * 127),
         time=2 ** Repeat([7, 7, 8]),
@@ -42,7 +42,7 @@ def notes_chord_progression():
     # does the same thing:
     notes = RepeatEach([0, 2, 3, 5], 3) + Repeat(chords.Major)
 
-    return NoteOns(
+    return MidiNoteOns(
         note_on=Repeat(notes) + 60,
         velocity=80,
         time=512,
@@ -51,15 +51,28 @@ def notes_chord_progression():
 
 def notes_euclidean_gates():
 
-    eu = EuclideanRhythm([1, 2, 3, 4], 4)
+    eu = EuclideanRhythm([1, 2, 3, 4], 8)
 
-    return GateToMidi(eu, 60, ticks=256)
+    return GateToMidi(eu, 60, ticks=64)
+
+
+def notes_merged_midi():
+
+    notes = FlatList(Divisors(Range(300)))
+
+    ticks = 100
+    return MergeMidiNoteOns(
+        Repeat(GateToMidi(EuclideanRhythm([1, 2, 1, 3], 8), Repeat(Range(20))+35, ticks=ticks, channel=9)),
+        Repeat(GateToMidi(EuclideanRhythm([4, 2, 4, 6], 8), Repeat([GmDrum.LowBongo, GmDrum.HiBongo]), ticks=ticks, channel=9)),
+        GateToMidi(EuclideanRhythm([1, 4, 4, 4], 32), 76 + notes, ticks=ticks),
+    )
 
 
 def test_mido_midi():
-    return NoteOns(
+    return MidiNoteOns(
         note_on=[60, 61, 62, 63],
         time=[0, 20, 500, 0],
+        channel=10,
     )
 
 
@@ -71,6 +84,7 @@ if __name__ == "__main__":
         #notes = notes_layers()
         #notes = notes_euclidean_gates()
         #notes = test_mido_midi()
+        notes = notes_merged_midi()
 
         print(notes.to_string(max_length=40))
 

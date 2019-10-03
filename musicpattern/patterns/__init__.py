@@ -9,6 +9,6 @@ from ._key_value import KeyValue
 from ._lambda import Lambda
 from ._list import List, FlatList
 from ._next import Next
-from ._note import NoteOns
+from ._midi_note import MidiNoteOns, MergeMidiNoteOns
 from ._range import Range
 from ._repeat import Repeat, RepeatEach

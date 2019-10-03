@@ -49,15 +49,17 @@ def notes_chord_progression():
     )
 
 
-def notes_chord_progression_2():
+def notes_euclidean_gates():
 
-    notes16 = Repeat([0, 4, 7, 10])
-    notes8 = Repeat([0, 4, 7])
+    eu = EuclideanRhythm([1, 2, 3, 4], 4)
 
+    return GateToMidi(eu, 60, ticks=256)
+
+
+def test_mido_midi():
     return NoteOns(
-        note_on=Repeat(notes16) + 60,
-        velocity=80,
-        time=512,
+        note_on=[60, 61, 62, 63],
+        time=[0, 20, 500, 0],
     )
 
 
@@ -66,7 +68,9 @@ if __name__ == "__main__":
     try:
         player = MidoPlayer(device_index=1)
 
-        notes = notes_chord_progression()
+        #notes = notes_layers()
+        #notes = notes_euclidean_gates()
+        #notes = test_mido_midi()
 
         print(notes.to_string(max_length=40))
 

@@ -10,8 +10,8 @@ class MidiMixin:
     {
         "note_on": int,     #
         "note_off": int,    # optional instead of note_on
-        "velocity": int,
-        "time": int|float,  # number of ticks to wait after note
+        "velocity": int,    # 0-127
+        "time": int|float,  # number of ticks to wait before note
     }
     """
     def to_midi_track(self, max_length=128):
@@ -55,12 +55,12 @@ class MidiMixin:
             else:
                 max_note = max(max_note, note)
 
+            cur_time += time
+
             key_time = cur_time // 32
             if key_time not in notes_by_time:
                 notes_by_time[key_time] = set()
             notes_by_time[key_time].add(note)
-
-            cur_time += time
 
         min_key_time = min(notes_by_time.keys())
         max_key_time = max(notes_by_time.keys())
@@ -79,8 +79,14 @@ class MidiMixin:
 
 
 class NoteOns(MidiMixin, KeyValue):
-
-    def __init__(self, note_on, velocity=127, time=128):
+    """
+        {
+            "note_on": int,     # note value 0-127
+            "velocity": int,    # 0-127
+            "time": int|float,  # number of ticks to wait before note
+        }
+    """
+    def __init__(self, note_on, velocity=64, time=0):
         super().__init__({
             "note_on": note_on,
             "velocity": velocity,

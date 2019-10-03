@@ -76,6 +76,27 @@ def test_mido_midi():
     )
 
 
+def notes_midi_tracks():
+
+    notes = FlatList(Divisors(Range(300)))
+
+    beats = {
+        GmDrum.AcousticBaseDrum: EuclideanRhythm(2, 8),
+        GmDrum.AcousticSnare: EuclideanRhythm(4, 8),
+    }
+
+    ticks = 100
+    beat_tracks = [
+        GateToMidi(Repeat(beat), note=note, ticks=ticks)
+        for note, beat in beats.values()
+    ]
+
+    return MergeMidiNoteOns(
+        Repeat(GateToMidi(EuclideanRhythm([1, 2, 1, 3], 8), Repeat(Range(20))+35, ticks=ticks, channel=9)),
+        Repeat(GateToMidi(EuclideanRhythm([4, 2, 4, 6], 8), Repeat([GmDrum.LowBongo, GmDrum.HiBongo]), ticks=ticks, channel=9)),
+        GateToMidi(EuclideanRhythm([1, 4, 4, 4], 32), 76 + notes, ticks=ticks),
+    )
+
 if __name__ == "__main__":
 
     try:

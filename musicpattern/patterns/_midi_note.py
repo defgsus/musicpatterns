@@ -14,7 +14,7 @@ class MidiMixin:
         "time": int|float,  # number of ticks to wait before note
     }
     """
-    def to_midi_track(self, max_length=128, program=None):
+    def to_midi_track(self, max_length=128, program=None, channel=None):
         import mido
 
         track = mido.MidiTrack()
@@ -29,7 +29,7 @@ class MidiMixin:
                 note=int(n.get("note_on") or n.get("note_off")),
                 velocity=int(n["velocity"]),
                 time=n["time"],
-                channel=n.get("channel") or 0,
+                channel=channel or n.get("channel") or 0,
             ))
 
         return track

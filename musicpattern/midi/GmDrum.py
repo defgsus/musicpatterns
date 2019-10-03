@@ -3,6 +3,8 @@ Definitions of General MIDI drum sounds
 https://www.midi.org/specifications-old/item/gm-level-1-sound-set
 """
 
+Channel = 9
+
 AcousticBaseDrum = 35
 BassDrum1 = 36
 SideStick = 37

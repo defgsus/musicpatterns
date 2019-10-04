@@ -72,7 +72,7 @@ class PatternBase:
     def __mul__(self, other):
         return PatternBinaryOperator(self, other, "*")
 
-    def __div__(self, other):
+    def __truediv__(self, other):
         return PatternBinaryOperator(self, other, "/")
 
     def __idiv__(self, other):
@@ -93,7 +93,7 @@ class PatternBase:
     def __rmul__(self, other):
         return PatternBinaryOperator(other, self, "*")
 
-    def __rdiv__(self, other):
+    def __rtruediv__(self, other):
         return PatternBinaryOperator(other, self, "/")
 
     def __rmod__(self, other):

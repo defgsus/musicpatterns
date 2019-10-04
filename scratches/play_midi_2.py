@@ -10,9 +10,10 @@ class Music:
     def __init__(self):
         self.beats = {
             GmDrum.AcousticBaseDrum: EuclideanRhythm(2, 8),
-            GmDrum.ClosedHiHat: EuclideanRhythm(4, 8),
+            GmDrum.ClosedHiHat: Repeat(EuclideanRhythm(4, 8)) * (Sin(Range()/1.2)*.2+.8),
             GmDrum.LowMidTom: EuclideanRhythm(1, 3),
             GmDrum.LowFloorTom: EuclideanRhythm(1, 14),
+            GmDrum.RideCymbal1: IsPrime(Range(48)+101) * .7,
         }
 
     def to_midi_tracks(self, max_length=1024):
@@ -27,7 +28,9 @@ class Music:
             for note, beat in self.beats.items()
         ]
 
-        return beat_tracks
+        beat_track = mido.merge_tracks(beat_tracks)
+
+        return [beat_track]
 
     def to_midi_file(self, max_length=1024):
         midifile = mido.MidiFile()

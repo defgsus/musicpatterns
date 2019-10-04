@@ -40,6 +40,9 @@ class GateToMidi(MidiMixin, PatternBase):
                 channel = channel_iter.next()
 
                 if gate:
+                    if isinstance(gate, float):
+                        vel = max(0, min(127, int(vel * gate)))
+
                     yield {
                         "note_on": note,
                         "velocity": vel,

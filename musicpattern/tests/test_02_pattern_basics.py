@@ -34,6 +34,7 @@ class TestPatternBase(unittest.TestCase):
         self.assertEqual([5, 7, 9], list(List([1, 2, 3]) + List([4, 5, 6])))
         self.assertEqual([2, 4, 8], list(2 ** List([1, 2, 3])))
         self.assertEqual([1, 4, 9], list(List([1, 2, 3]) ** 2))
+        self.assertEqual([-1, -2, -3], list(-List([1, 2, 3])))
 
     def test_12_compare_operators(self):
         self.assertEqual([0, 1, 0], list(Range(3) == 1))

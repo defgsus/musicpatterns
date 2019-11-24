@@ -18,6 +18,11 @@ class PatternIterator:
 
 
 class PatternBase:
+    """
+    base class for iterable patterns.
+    Constructor takes all key/value pairs as arguments to the generator.
+    A pattern can be iterated, indexed and combined via binary operators
+    """
 
     def __init__(self, **parameters):
         self._parameter_names = list(parameters.keys())
@@ -63,6 +68,10 @@ class PatternBase:
 
     # --- math operators ---
 
+    def __neg__(self):
+        from ._lambda import Lambda
+        return Lambda(self, lambda x: -x)
+
     def __add__(self, other):
         return BinaryOperator(self, other, "+")
 
@@ -82,6 +91,7 @@ class PatternBase:
         return BinaryOperator(self, other, "%")
 
     def __pow__(self, power, modulo=None):
+        assert not modulo, "power modulo not supported"
         return BinaryOperator(self, power, "**")
 
     def __radd__(self, other):

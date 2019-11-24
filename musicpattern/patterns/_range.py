@@ -4,30 +4,30 @@ from ._next import Next
 
 class Range(PatternBase):
 
-    def __init__(self, end=None, offset=1):
+    def __init__(self, end=None, step=1):
         self.end = None
-        self.offset = None
-        super().__init__(end=end, offset=offset)
+        self.step = None
+        super().__init__(end=end, step=step)
 
     def iterate(self):
         try:
             if self.end is None:
-                offset = Next(self.offset, repeat_scalar=True)
+                step = Next(self.step, repeat_scalar=True)
 
                 value = 0
                 while True:
-                    cur_offset = offset.next()
+                    cur_offset = step.next()
                     yield value
                     value += cur_offset
 
             else:
                 end = Next(self.end, repeat_scalar=True)
-                offset = Next(self.offset, repeat_scalar=True)
+                step = Next(self.step, repeat_scalar=True)
 
                 value = 0
                 while True:
                     cur_end = end.next()
-                    cur_offset = offset.next()
+                    cur_offset = step.next()
                     if cur_offset > 0:
                         if value >= cur_end:
                             return

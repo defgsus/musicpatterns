@@ -42,7 +42,7 @@ class Music:
 if __name__ == "__main__":
 
     try:
-        player = MidoPlayer(device_index=1)
+        player = MidoPlayer(device_index=None)
 
         music = Music()
 

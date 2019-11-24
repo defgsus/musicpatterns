@@ -42,7 +42,7 @@ class PatternBase:
 
     def parameter_string(self):
         return ", ".join(
-            "%s=%s" % (key, value)
+            "%s=%s" % (key, repr(value))
             for key, value in self.parameters().items()
         )
 
@@ -64,46 +64,64 @@ class PatternBase:
     # --- math operators ---
 
     def __add__(self, other):
-        return PatternBinaryOperator(self, other, "+")
+        return BinaryOperator(self, other, "+")
 
     def __sub__(self, other):
-        return PatternBinaryOperator(self, other, "-")
+        return BinaryOperator(self, other, "-")
 
     def __mul__(self, other):
-        return PatternBinaryOperator(self, other, "*")
+        return BinaryOperator(self, other, "*")
 
     def __truediv__(self, other):
-        return PatternBinaryOperator(self, other, "/")
+        return BinaryOperator(self, other, "/")
 
     def __idiv__(self, other):
-        return PatternBinaryOperator(self, other, "//")
+        return BinaryOperator(self, other, "//")
 
     def __mod__(self, other):
-        return PatternBinaryOperator(self, other, "%")
+        return BinaryOperator(self, other, "%")
 
     def __pow__(self, power, modulo=None):
-        return PatternBinaryOperator(self, power, "**")
+        return BinaryOperator(self, power, "**")
 
     def __radd__(self, other):
-        return PatternBinaryOperator(other, self, "+")
+        return BinaryOperator(other, self, "+")
 
     def __rsub__(self, other):
-        return PatternBinaryOperator(other, self, "-")
+        return BinaryOperator(other, self, "-")
 
     def __rmul__(self, other):
-        return PatternBinaryOperator(other, self, "*")
+        return BinaryOperator(other, self, "*")
 
     def __rtruediv__(self, other):
-        return PatternBinaryOperator(other, self, "/")
+        return BinaryOperator(other, self, "/")
 
     def __rmod__(self, other):
-        return PatternBinaryOperator(other, self, "%")
+        return BinaryOperator(other, self, "%")
 
     def __rpow__(self, other):
-        return PatternBinaryOperator(other, self, "**")
+        return BinaryOperator(other, self, "**")
+
+    def __eq__(self, other):
+        return BinaryOperator(self, other, "==")
+
+    def __ne__(self, other):
+        return BinaryOperator(self, other, "!=")
+
+    def __gt__(self, other):
+        return BinaryOperator(self, other, ">")
+
+    def __ge__(self, other):
+        return BinaryOperator(self, other, ">=")
+
+    def __lt__(self, other):
+        return BinaryOperator(self, other, "<")
+
+    def __le__(self, other):
+        return BinaryOperator(self, other, "<=")
 
 
-class PatternBinaryOperator(PatternBase):
+class BinaryOperator(PatternBase):
     def __init__(self, left, right, op):
         self.left = None
         self.right = None
@@ -125,6 +143,18 @@ class PatternBinaryOperator(PatternBase):
             self.func = lambda l, r: l % r
         elif self.op == "**":
             self.func = lambda l, r: l ** r
+        elif self.op == "==":
+            self.func = lambda l, r: 1 if l == r else 0
+        elif self.op == "!=":
+            self.func = lambda l, r: 1 if l != r else 0
+        elif self.op == ">":
+            self.func = lambda l, r: 1 if l > r else 0
+        elif self.op == ">=":
+            self.func = lambda l, r: 1 if l >= r else 0
+        elif self.op == "<":
+            self.func = lambda l, r: 1 if l < r else 0
+        elif self.op == "<=":
+            self.func = lambda l, r: 1 if l <= r else 0
         if self.func is None:
             raise ValueError("Unsupported operator '%s'" % self.op)
 

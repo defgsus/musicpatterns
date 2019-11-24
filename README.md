@@ -12,3 +12,7 @@ following apt packages:
 - libjack2-dev
 
 optionally some synthesizer like **fluidsynth**
+
+`pip install -r requirements.txt`
+
+Then check `./scratches/` and `./notebooks/` directories.

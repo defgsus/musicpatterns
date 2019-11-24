@@ -85,6 +85,7 @@ class MidiMixin:
 
 class MidiNoteOns(MidiMixin, KeyValue):
     """
+        Generates a dictionary for each input value:
         {
             "note_on": int,     # note value 0-127
             "velocity": int,    # 0-127
@@ -102,7 +103,9 @@ class MidiNoteOns(MidiMixin, KeyValue):
 
 
 class MergeMidiNoteOns(MidiMixin, PatternBase):
-
+    """
+    Merge two or more MidiNoteOns outputs
+    """
     def __init__(self, *notes):
         self.notes = None
         super().__init__(notes=notes)

@@ -2,6 +2,9 @@ from ._next import Next
 from ._convert import convert_to_list
 
 
+CLASSES = []
+
+
 class PatternIterator:
 
     def __init__(self, pattern):
@@ -23,6 +26,9 @@ class PatternBase:
     Constructor takes all key/value pairs as arguments to the generator.
     A pattern can be iterated, indexed and combined via binary operators
     """
+
+    def __init_subclass__(cls, **kwargs):
+        CLASSES.append(cls)
 
     def __init__(self, **parameters):
         self._parameter_names = list(parameters.keys())

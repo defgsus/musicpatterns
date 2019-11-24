@@ -2,11 +2,13 @@ import math
 
 from ._base import PatternBase
 from ._next import Next
-from ._list import List
 from ._lambda import Lambda
 
 
 class IsPrime(PatternBase):
+    """
+    Return if each input number is prime (1) or not (0)
+    """
 
     def __init__(self, value):
         self.value = None
@@ -28,5 +30,6 @@ class IsPrime(PatternBase):
 
 
 class Sin(Lambda):
+    """Sine function"""
     def __init__(self, value):
         super().__init__(value, math.sin)

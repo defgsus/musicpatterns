@@ -3,6 +3,9 @@ from ._inspect import is_iterable
 
 
 class List(PatternBase):
+    """
+    Just convert the input iterable to a pattern type.
+    """
 
     def __init__(self, values):
         self.values = None

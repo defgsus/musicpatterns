@@ -1,4 +1,4 @@
-from ._base import PatternBase
+from ._base import PatternBase, CLASSES
 from ._convert import convert_to_list
 from ._crop import MaxLength, Length
 from ._divisors import Divisors
@@ -13,3 +13,9 @@ from ._math import IsPrime, Sin
 from ._midi_note import MidiNoteOns, MergeMidiNoteOns
 from ._range import Range
 from ._repeat import Repeat, RepeatEach
+
+
+__doc__ = "\n".join(
+    f"{cls.__name__}: {cls.__doc__}"
+    for cls in sorted(CLASSES, key=lambda cls: cls.__name__)
+)

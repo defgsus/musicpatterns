@@ -3,6 +3,11 @@ import unittest
 from musicpattern.patterns import *
 
 
+if 0:
+    import musicpattern.patterns
+    print(musicpattern.patterns.__doc__)
+
+
 class TestPatternBase(unittest.TestCase):
 
     def test_01_range(self):

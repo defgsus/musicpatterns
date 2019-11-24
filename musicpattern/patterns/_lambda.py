@@ -2,6 +2,9 @@ from ._base import PatternBase
 
 
 class Lambda(PatternBase):
+    """
+    Apply function to each value of input
+    """
 
     def __init__(self, pattern, function):
         self.pattern = None

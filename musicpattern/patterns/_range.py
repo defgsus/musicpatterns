@@ -3,6 +3,10 @@ from ._next import Next
 
 
 class Range(PatternBase):
+    """
+    Generate numbers for 0 to `end` in `step`.
+    Unlimited in end is None.
+    """
 
     def __init__(self, end=None, step=1):
         self.end = None

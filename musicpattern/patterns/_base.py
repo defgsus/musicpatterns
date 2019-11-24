@@ -1,5 +1,6 @@
 from ._next import Next
 from ._convert import convert_to_list
+from ._inspect import is_iterable
 
 
 CLASSES = []
@@ -144,34 +145,34 @@ class BinaryOperator(PatternBase):
         self.op = None
         super().__init__(left=left, right=right, op=op)
 
-        self.func = None
+        self.op_func = None
         if self.op == "+":
-            self.func = lambda l, r: l + r
+            self.op_func = lambda l, r: l + r
         elif self.op == "-":
-            self.func = lambda l, r: l - r
+            self.op_func = lambda l, r: l - r
         elif self.op == "*":
-            self.func = lambda l, r: l * r
+            self.op_func = lambda l, r: l * r
         elif self.op == "/":
-            self.func = lambda l, r: l / r
+            self.op_func = lambda l, r: l / r
         elif self.op == "//":
-            self.func = lambda l, r: l // r
+            self.op_func = lambda l, r: l // r
         elif self.op == "%":
-            self.func = lambda l, r: l % r
+            self.op_func = lambda l, r: l % r
         elif self.op == "**":
-            self.func = lambda l, r: l ** r
+            self.op_func = lambda l, r: l ** r
         elif self.op == "==":
-            self.func = lambda l, r: 1 if l == r else 0
+            self.op_func = lambda l, r: 1 if l == r else 0
         elif self.op == "!=":
-            self.func = lambda l, r: 1 if l != r else 0
+            self.op_func = lambda l, r: 1 if l != r else 0
         elif self.op == ">":
-            self.func = lambda l, r: 1 if l > r else 0
+            self.op_func = lambda l, r: 1 if l > r else 0
         elif self.op == ">=":
-            self.func = lambda l, r: 1 if l >= r else 0
+            self.op_func = lambda l, r: 1 if l >= r else 0
         elif self.op == "<":
-            self.func = lambda l, r: 1 if l < r else 0
+            self.op_func = lambda l, r: 1 if l < r else 0
         elif self.op == "<=":
-            self.func = lambda l, r: 1 if l <= r else 0
-        if self.func is None:
+            self.op_func = lambda l, r: 1 if l <= r else 0
+        if self.op_func is None:
             raise ValueError("Unsupported operator '%s'" % self.op)
 
     def iterate(self):
@@ -179,7 +180,24 @@ class BinaryOperator(PatternBase):
             left = Next(self.left, repeat_scalar=True)
             right = Next(self.right, repeat_scalar=True)
             while True:
-                yield self.func(left.next(), right.next())
+                left_next = left.next()
+                right_next = right.next()
+                if is_iterable(left_next) or is_iterable(right_next):
+                    yield self._sub_iterate(left_next, right_next)
+                else:
+                    yield self.op_func(left_next, right_next)
 
         except StopIteration:
             pass
+
+    def _sub_iterate(self, left, right):
+        chord = []
+        try:
+            left = Next(left, repeat_scalar=True)
+            right = Next(right, repeat_scalar=True)
+            while True:
+                chord.append(self.op_func(left.next(), right.next()))
+
+        except StopIteration:
+            pass
+        return chord

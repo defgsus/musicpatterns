@@ -1,4 +1,5 @@
 from ._base import PatternBase, CLASSES
+from ._chord import Chord
 from ._convert import convert_to_list
 from ._crop import MaxLength, Length
 from ._divisors import Divisors

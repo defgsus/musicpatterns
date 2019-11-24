@@ -81,11 +81,30 @@ class TestPatternBase(unittest.TestCase):
         nested = List([l123, l123])
         self.assertEqual([[1, 2, 3], [1, 2, 3]], nested.to_list())
 
+    def test_50_sublist_operators(self):
+        self.assertEqual(
+            [[2, 3, 4], [2, 3, 4]],
+            (Repeat(Chord([1, 2, 3]), 2) + 1).to_list(),
+        )
+        self.assertEqual(
+            [[1, 2, 3], [4, 5, 6]],
+            (Repeat(Chord([1, 2, 3]), 2) + List([0, 3])).to_list(),
+        )
+        self.assertEqual(
+            [[2, 4, 6], 8, 10],
+            (List([[1, 2, 3], 4, 5]) * 2).to_list(),
+        )
+
     def test_100_divisors(self):
         self.assertEqual(
             [[1], [1, 2], [1, 3], [1, 2, 4], [1, 5], [1, 2, 3, 6], [1, 7], [1, 2, 4, 8], [1, 3, 9], [1, 2, 5, 10]],
             Divisors([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).to_list(),
         )
+        self.assertEqual(
+            [[-1], [-1, -2], [-1, -3], [-1, -2, -4], [-1, -5], [-1, -2, -3, -6], [-1, -7], [-1, -2, -4, -8], [-1, -3, -9], [-1, -2, -5, -10]],
+            Divisors([-1, -2, -3, -4, -5, -6, -7, -8, -9, -10]).to_list(),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

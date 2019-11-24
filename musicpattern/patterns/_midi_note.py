@@ -2,6 +2,7 @@ from ._base import PatternBase
 from ._next import Next
 from ._key_value import KeyValue
 from ._crop import MaxLength
+from ._inspect import is_iterable
 
 
 class MidiMixin:
@@ -26,7 +27,7 @@ class MidiMixin:
         for i, n in enumerate(MaxLength(self, max_length)):
             track.append(mido.Message(
                 "note_on" if n.get("note_on") else "note_off",
-                note=int(n.get("note_on") or n.get("note_off")),
+                note=int(n.get("note_on") or n.get("note_off") or 0),
                 velocity=int(n["velocity"]),
                 time=n["time"],
                 channel=channel or n.get("channel") or 0,
@@ -83,7 +84,7 @@ class MidiMixin:
         return "\n".join("".join(line) for line in lines)
 
 
-class MidiNoteOns(MidiMixin, KeyValue):
+class MidiNoteOns(MidiMixin, PatternBase):
     """
         Generates a dictionary for each input value:
         {
@@ -94,12 +95,39 @@ class MidiNoteOns(MidiMixin, KeyValue):
         }
     """
     def __init__(self, note_on, velocity=64, time=0, channel=0):
-        super().__init__({
-            "note_on": note_on,
-            "velocity": velocity,
-            "time": time,
-            "channel": channel,
-        })
+        self.note_on = None
+        self.velocity = None
+        self.time = None
+        self.channel = None
+        super().__init__(note_on=note_on, velocity=velocity, time=time, channel=channel)
+
+    def iterate(self):
+        note_on = Next(self.note_on)
+        velocity = Next(self.velocity, repeat_scalar=True)
+        time = Next(self.time, repeat_scalar=True)
+        channel = Next(self.channel, repeat_scalar=True)
+
+        try:
+            while True:
+                note_values = note_on.next()
+                if not is_iterable(note_values):
+                    note_values = [note_values]
+
+                next_velocity = velocity.next()
+                next_time = time.next()
+                next_channel = channel.next()
+
+                for note_value in note_values:
+                    yield {
+                        "note_on": note_value,
+                        "velocity": next_velocity,
+                        "time": next_time,
+                        "channel": next_channel,
+                    }
+                    next_time = 0
+
+        except StopIteration:
+            return
 
 
 class MergeMidiNoteOns(MidiMixin, PatternBase):
